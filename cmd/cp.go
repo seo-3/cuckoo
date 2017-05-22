@@ -49,15 +49,6 @@ to quickly create a Cobra application.`,
 }
 
 func execute() error {
-		fmt.Println("ｷﾀ━━━━(ﾟ∀ﾟ)━━━━!!")
-		fmt.Println(count)
-		fmt.Println(interval)
-		fmt.Println(region)
-		fmt.Println(access)
-		fmt.Println(secret)
-		fmt.Println(in)
-		fmt.Println(out)
-		fmt.Println(bucket)
 
 		file, err := os.Open(in)
     if err != nil {
