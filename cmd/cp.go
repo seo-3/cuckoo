@@ -15,7 +15,7 @@ import (
 // cpCmd represents the cp command
 var cpCmd = &cobra.Command{
 	Use:   "cp",
-	Short: "put 3 bject with N retry commmand",
+	Short: "put s3 object with N retry commmand",
 	Run: func(cmd *cobra.Command, args []string) {
 
 		err := execute()
