@@ -2,26 +2,20 @@ package cmd
 
 import (
 	"fmt"
-	"time"
-	"os"
 	"github.com/Songmu/retry"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/spf13/cobra"
+	"os"
+	"time"
 )
 
 // cpCmd represents the cp command
 var cpCmd = &cobra.Command{
 	Use:   "cp",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a svc library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "put 3 bject with N retry commmand",
 	Run: func(cmd *cobra.Command, args []string) {
 
 		err := execute()
@@ -33,35 +27,35 @@ to quickly create a Cobra application.`,
 
 func execute() error {
 
-		file, err := os.Open(in)
-    if err != nil {
-			return fmt.Errorf("err opening file: %s", err)
-    }
-    defer file.Close()
+	file, err := os.Open(in)
+	if err != nil {
+		return fmt.Errorf("err opening file: %s", err)
+	}
+	defer file.Close()
 
-    cre := credentials.NewStaticCredentials(
-        access,
-        secret,
-        "")
+	cre := credentials.NewStaticCredentials(
+		access,
+		secret,
+		"")
 
-    svc := s3.New(session.New(), &aws.Config{
-        Credentials: cre,
-        Region:      aws.String(region),
-    })
+	svc := s3.New(session.New(), &aws.Config{
+		Credentials: cre,
+		Region:      aws.String(region),
+	})
 
-		err = retry.Retry(uint(count), time.Duration(interval)*time.Second, func() error {
-    	// return error once in a while
-			_, err := svc.PutObject(&s3.PutObjectInput{
-	        Bucket: aws.String(bucket),
-	        Key:    aws.String(out),
-	        Body:   file,
-	    })
-			return err
+	err = retry.Retry(uint(count), time.Duration(interval)*time.Second, func() error {
+		// return error once in a while
+		_, err := svc.PutObject(&s3.PutObjectInput{
+			Bucket: aws.String(bucket),
+			Key:    aws.String(out),
+			Body:   file,
 		})
-		if err != nil {
-    	return fmt.Errorf("faild to retire the host: %s", err)
-		}
-		return nil
+		return err
+	})
+	if err != nil {
+		return fmt.Errorf("faild to retire the host: %s", err)
+	}
+	return nil
 }
 
 var count, interval int
