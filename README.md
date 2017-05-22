@@ -9,6 +9,11 @@ cuckoo
 
 put s3 object with retry N times 
 
+## Usage
+
+```
+$ cuckoo s3 cp --help
+```
 
 ## Author
 
